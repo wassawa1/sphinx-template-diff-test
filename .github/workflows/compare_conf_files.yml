@@ -31,11 +31,11 @@ jobs:
           mkdir -p full_docs
           sphinx-apidoc -F -o ./full_docs -A "author_name" -H "project_name" --templatedir ${{ github.workspace }}/templates .
 
-          - name: Move conf.py to Articles
-          run: |
-            mkdir -p articles
-            cp ./relative_docs/conf.py ./articles/conf_relative.py
-            cp ./full_docs/conf.py ./articles/conf_full.py
+      - name: Move conf.py to Articles
+        run: |
+          mkdir -p articles
+          cp ./relative_docs/conf.py ./articles/conf_relative.py
+          cp ./full_docs/conf.py ./articles/conf_full.py
   
       - name: Compare Generated Files
         run: |
