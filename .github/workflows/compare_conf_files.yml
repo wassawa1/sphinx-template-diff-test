@@ -1,4 +1,4 @@
-name: Sphinx Template Difference Test
+name: Sphinx Template Comparison Test
 
 on:
   push:
@@ -31,12 +31,18 @@ jobs:
           mkdir -p full_docs
           sphinx-apidoc -F -o ./full_docs -A "author_name" -H "project_name" --templatedir ${{ github.workspace }}/templates .
 
-      - name: Move conf.py to Articles
+      - name: Compare Relative Path Generated conf.py with conf.py_t
         run: |
-          mkdir -p articles
-          cp ./relative_docs/conf.py ./articles/conf_relative.py
-          cp ./full_docs/conf.py ./articles/conf_full.py
-  
-      - name: Compare Generated Files
+          diff ./relative_docs/conf.py ./templates/conf.py_t || echo "Relative Path Files differ"
+
+      - name: Compare Full Path Generated conf.py with conf.py_t
         run: |
-            diff ./articles/conf_relative.py ./articles/conf_full.py || echo "Files differ"
+          diff ./full_docs/conf.py ./templates/conf.py_t || echo "Full Path Files differ"
+
+      - name: Archive Generated Files for Download
+        uses: actions/upload-artifact@v3
+        with:
+          name: generated-conf-files
+          path: |
+            ./relative_docs/conf.py
+            ./full_docs/conf.py
